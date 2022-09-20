@@ -1,10 +1,6 @@
-# Project Title
+# CVE-2014-6287 Rejetto HFS 2.3.x
 
-CVE-2014-6287 Rejetto HFS (HTTP File Server) 2.3.x - Remote Command Execution
-
-## Description
-
-A python3 script for the CVE-2014-6287 Rejetto HFS exploit in order get a reverse shell.
+A python3 script for the CVE-2014-6287 Rejetto HFS RCE exploit in order get a reverse shell.
 
 ## Getting Started
 
